@@ -22,21 +22,16 @@ def webhook(request):
 
     try:
         event = stripe.Webhook.construct_event(
-        payload, sig_header, wh_secret
+            payload, sig_header, wh_secret
         )
     except ValueError as e:
         # Invalid payload
-        print(e)
-        print("Value ERROR")
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError as e:
         # Invalid signature
-        print("SIGNATURE ERROR")
         return HttpResponse(status=400)
     except Exception as e:
-        print(e)
         return HttpResponse(content=e, status=400)
-    print("SUCCESS! TRY BLOCK WORKED!")
 
     # Set up a webhook handler
     handler = StripeWH_Handler(request)
